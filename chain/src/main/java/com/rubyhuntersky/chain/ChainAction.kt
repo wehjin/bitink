@@ -1,21 +1,26 @@
 package com.rubyhuntersky.chain
 
+data class TagId(
+    val author: PenName,
+    val entity: Entity,
+    val attribute: Attribute
+)
+
 sealed class ChainAction {
 
-    abstract val actionId: Id
+    abstract val actionId: ActionId
 
-    data class Id(
-        val blockHeight: Long,
-        val actionNumber: Long
-    )
+    fun applyToBalance(balance: ChainBalance): ChainBalance {
+        TODO("not implemented")
+    }
 
     data class RewardOperator(
-        override val actionId: Id,
+        override val actionId: ActionId,
         val rewardWell: InkWell
     ) : ChainAction()
 
     data class TransferInk(
-        override val actionId: Id,
+        override val actionId: ActionId,
         val startInks: List<Ink>,
         val endWells: List<InkWell>,
         val operatorReward: Long,
@@ -23,11 +28,9 @@ sealed class ChainAction {
     ) : ChainAction()
 
     data class AssertTag(
-        override val actionId: Id,
-        val author: PenName,
-        val entity: Entity,
-        val attribute: Attribute,
-        val value: Value,
+        override val actionId: ActionId,
+        val tagId: TagId,
+        val tagValue: Value,
         val startInks: List<Ink>,
         val overflowWell: InkWell,
         val operatorReward: Long,
@@ -35,10 +38,8 @@ sealed class ChainAction {
     ) : ChainAction()
 
     data class RetractTag(
-        override val actionId: Id,
-        val author: PenName,
-        val entity: Entity,
-        val attribute: Attribute,
+        override val actionId: ActionId,
+        val tagId: TagId,
         val startInks: List<Ink>,
         val overflowWell: InkWell,
         val operatorReward: Long,
@@ -47,14 +48,14 @@ sealed class ChainAction {
 }
 
 data class Ink(
-    val wellActionId: ChainAction.Id,
+    val wellActionId: ActionId,
     val wellIndex: Int
 )
 
 data class InkWell(
-    val owner: PenName,
     val size: Long,
-    val ink: Ink
+    val ink: Ink,
+    val owner: PenName
 ) {
     val actionId get() = ink.wellActionId
     val index get() = ink.wellIndex
