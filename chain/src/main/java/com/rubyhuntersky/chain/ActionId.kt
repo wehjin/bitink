@@ -1,6 +1,6 @@
 package com.rubyhuntersky.chain
 
-data class ChainActionId(
+data class ActionId(
     val blockHeight: BlockHeight,
-    val index: Long
+    val actionIndex: Long
 )

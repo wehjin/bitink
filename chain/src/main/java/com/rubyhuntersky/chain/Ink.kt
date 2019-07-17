@@ -1,7 +1,7 @@
 package com.rubyhuntersky.chain
 
-data class InkBall(
-    val id: InkBallId,
+data class Ink(
+    val id: InkId,
     val size: Long,
     val owner: PenName
 ) {
