@@ -53,7 +53,7 @@ data class BlockHeader(
     val id: ChainId get() = TODO()
 
     fun isValid(previousChain: Chain): Boolean =
-        height == (previousChain.height.next())
+        height == (previousChain.height.inc())
                 && previousChainId == previousChain.id
                 && blockTime.isValid(previousChain)
 }

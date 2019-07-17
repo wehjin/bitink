@@ -1,64 +1,51 @@
 package com.rubyhuntersky.chain
 
-data class TagId(
-    val author: PenName,
-    val entity: Entity,
-    val attribute: Attribute
-)
-
 sealed class ChainAction {
 
-    abstract val actionId: ActionId
+    abstract val id: ChainActionId
+    abstract val signature: Signature
 
     fun applyToBalance(balance: ChainBalance): ChainBalance {
         TODO("not implemented")
     }
 
-    data class RewardOperator(
-        override val actionId: ActionId,
-        val rewardWell: InkWell
+    data class SummonInk(
+        override val id: ChainActionId,
+        val output: InkBall,
+        override val signature: Signature
     ) : ChainAction()
 
     data class TransferInk(
-        override val actionId: ActionId,
-        val startInks: List<Ink>,
-        val endWells: List<InkWell>,
-        val operatorReward: Long,
-        val originatorSignature: Signature
+        override val id: ChainActionId,
+        val inputs: List<InkBallId>,
+        val outputs: List<InkBall>,
+        val feeSize: Long,
+        override val signature: Signature
     ) : ChainAction()
 
     data class AssertTag(
-        override val actionId: ActionId,
+        override val id: ChainActionId,
         val tagId: TagId,
         val tagValue: Value,
-        val startInks: List<Ink>,
-        val overflowWell: InkWell,
-        val operatorReward: Long,
-        val authorSignature: Signature
+        val inputs: List<InkBallId>,
+        val overflow: InkBall,
+        val feeSize: Long,
+        override val signature: Signature
     ) : ChainAction()
 
     data class RetractTag(
-        override val actionId: ActionId,
+        override val id: ChainActionId,
         val tagId: TagId,
-        val startInks: List<Ink>,
-        val overflowWell: InkWell,
-        val operatorReward: Long,
-        val authorSignature: Signature
+        val inputs: List<InkBallId>,
+        val overflow: InkBall,
+        val feeSize: Long,
+        override val signature: Signature
+    ) : ChainAction()
+
+    data class BurnPen(
+        override val id: ChainActionId,
+        val penName: PenName,
+        override val signature: Signature
     ) : ChainAction()
 }
 
-data class Ink(
-    val wellActionId: ActionId,
-    val wellIndex: Int
-)
-
-data class InkWell(
-    val size: Long,
-    val ink: Ink,
-    val owner: PenName
-) {
-    val actionId get() = ink.wellActionId
-    val index get() = ink.wellIndex
-}
-
-data class Signature(val string: String)
