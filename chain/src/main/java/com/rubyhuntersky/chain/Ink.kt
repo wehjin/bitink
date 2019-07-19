@@ -1,9 +1,10 @@
 package com.rubyhuntersky.chain
 
 data class Ink(
-    val id: InkId,
+    val inkId: InkId,
     val size: Long,
-    val owner: PenName
+    val surface: Surface
 ) {
-    val useBeforeHeight: BlockHeight get() = id.actionId.blockHeight + INK_DWELL_LENGTH
+    val useBeforeHeight: BlockHeight get() = inkId.actionId.blockHeight + INK_DWELL_LENGTH
 }
+

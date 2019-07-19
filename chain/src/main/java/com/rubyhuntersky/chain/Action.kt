@@ -1,41 +1,40 @@
 package com.rubyhuntersky.chain
 
-sealed class Action {
+sealed class Action(val typeNumber: Int) {
+    abstract val header: ActionHeader
 
-    abstract val id: ActionId
-    abstract val signature: Signature
+    val id get() = header.id
+    val minHeight get() = header.minHeight
+    val witnessId get() = header.witnessId
 
     fun applyToBalance(balance: Balance): Balance {
         TODO("not implemented")
     }
 
-    data class Summon(
-        override val id: ActionId,
-        val output: Ink,
-        override val signature: Signature
-    ) : Action()
+    data class SimmerInk(
+        override val header: ActionHeader,
+        val output: Ink
+    ) : Action(typeNumber = 1)
 
-    data class Send(
-        override val id: ActionId,
-        val inputs: List<InkId>,
+
+    data class SiphonInk(
+        override val header: ActionHeader,
+        val inputs: List<Nib>,
         val outputs: List<Ink>,
-        val feeSize: Long,
-        override val signature: Signature
-    ) : Action()
+        val feeSize: Long
+    ) : Action(typeNumber = 2)
 
-    data class State(
-        override val id: ActionId,
+    data class StateTag(
+        override val header: ActionHeader,
         val tag: Tag,
-        val inputs: List<InkId>,
+        val inputs: List<Nib>,
         val overflow: Ink,
-        val feeSize: Long,
-        override val signature: Signature
-    ) : Action()
+        val feeSize: Long
+    ) : Action(typeNumber = 3)
 
-    data class Burn(
-        override val id: ActionId,
-        val penName: PenName,
-        override val signature: Signature
-    ) : Action()
+    data class SmashPen(
+        override val header: ActionHeader,
+        val burnPen: PenName
+    ) : Action(typeNumber = 4)
 }
 

@@ -1,8 +1,8 @@
 package com.rubyhuntersky.chain
 
 data class Block(
-    val header: BlockElement.Header,
-    val body: BlockElement.Body
+    val header: BlockHeader,
+    val body: BlockBody
 ) {
     fun isValid(previousChain: Chain): Boolean =
         header.bodyHash == body.hash && header.isValid(previousChain) && body.isValid(previousChain, header)
