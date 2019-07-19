@@ -10,12 +10,12 @@ sealed class Nib {
 
     data class Signer(
         override val inkId: InkId,
-        val witnessId: WitnessId?
+        val witnessLabel: WitnessLabel?
     ) : Nib()
 
     data class ReleaseKey(
         override val inkId: InkId,
         val releaseKey: String,
-        val witnessId: WitnessId?
+        val witnessLabel: WitnessLabel?
     ) : Nib()
 }

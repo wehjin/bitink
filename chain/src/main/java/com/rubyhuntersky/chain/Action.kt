@@ -4,8 +4,8 @@ sealed class Action(val typeNumber: Int) {
     abstract val header: ActionHeader
 
     val id get() = header.id
+    val witnessLabel get() = header.witnessLabel
     val minHeight get() = header.minHeight
-    val witnessId get() = header.witnessId
 
     fun applyToBalance(balance: Balance): Balance {
         TODO("not implemented")
