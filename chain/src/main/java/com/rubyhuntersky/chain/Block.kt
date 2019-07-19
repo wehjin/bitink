@@ -1,11 +1,25 @@
 package com.rubyhuntersky.chain
 
+import com.rubyhuntersky.chain.action.ActionInBlock
+
 data class Block(
     val header: BlockHeader,
-    val body: BlockBody
+    val actions: List<ActionInBlock>,
+    val witnessMap: Map<WitnessLabel, Witness>
 ) {
-    fun isValid(previousChain: Chain): Boolean =
-        header.bodyHash == body.hash && header.isValid(previousChain) && body.isValid(previousChain, header)
+    fun isValidForChain(previousChain: Chain): Boolean {
+        // TODO witnesses are valid
+        // TODO witnesses confirm actions
+        return (header.actionsHash == actions.hash
+                && header.isValid(previousChain)
+                && actions.isValidForChain(previousChain))
+    }
 
-    fun applyActions(balance: Balance): Balance = body.applyActions(balance)
+    private val List<ActionInBlock>.hash: String
+        get() = this.fold("", { hash, action -> "$hash:$action" })
+
+    private fun List<ActionInBlock>.isValidForChain(previousChain: Chain): Boolean =
+        this.fold(true, { result, action -> result || action.isValid() })
+
+    fun applyActions(balance: Balance): Balance = actions.fold(balance, Balance::applyAction)
 }

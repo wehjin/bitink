@@ -4,7 +4,7 @@ data class BlockHeader(
     val height: BlockHeight,
     val previousChainId: ChainId,
     val blockTime: BlockTime,
-    val bodyHash: String,
+    val actionsHash: String,
     val nonce: Nonce,
     val historicalHash: String
 ) {
