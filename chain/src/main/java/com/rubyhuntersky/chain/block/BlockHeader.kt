@@ -1,4 +1,6 @@
-package com.rubyhuntersky.chain
+package com.rubyhuntersky.chain.block
+
+import com.rubyhuntersky.chain.*
 
 data class BlockHeader(
     val height: BlockHeight,

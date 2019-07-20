@@ -1,5 +1,8 @@
 package com.rubyhuntersky.chain
 
+import com.rubyhuntersky.chain.block.Block
+import com.rubyhuntersky.chain.block.BlockHeight
+
 sealed class Chain {
 
     abstract val id: ChainId

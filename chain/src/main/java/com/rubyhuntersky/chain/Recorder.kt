@@ -1,5 +1,7 @@
 package com.rubyhuntersky.chain
 
+import com.rubyhuntersky.chain.block.Block
+
 
 class Recorder(startRecord: Record) {
 

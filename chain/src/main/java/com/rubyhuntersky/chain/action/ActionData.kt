@@ -1,6 +1,7 @@
 package com.rubyhuntersky.chain.action
 
 import com.rubyhuntersky.chain.*
+import com.rubyhuntersky.chain.block.BlockHeight
 
 
 sealed class ActionData(val typeId: Int) {

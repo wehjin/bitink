@@ -1,5 +1,7 @@
 package com.rubyhuntersky.chain
 
+import com.rubyhuntersky.chain.block.BlockHeight
+
 sealed class Surface(val typeId: Int) {
 
     object Thick : Surface(1)

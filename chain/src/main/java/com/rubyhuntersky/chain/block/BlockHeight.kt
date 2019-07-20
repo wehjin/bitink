@@ -1,4 +1,4 @@
-package com.rubyhuntersky.chain
+package com.rubyhuntersky.chain.block
 
 data class BlockHeight(val value: Long) {
     operator fun inc(): BlockHeight = copy(value = value + 1)

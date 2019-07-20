@@ -1,6 +1,7 @@
 package com.rubyhuntersky.chain
 
-import com.rubyhuntersky.chain.action.ActionInBlock
+import com.rubyhuntersky.chain.action.BlockAction
+import com.rubyhuntersky.chain.block.BlockHeight
 
 data class Balance(
     val height: BlockHeight,
@@ -9,5 +10,5 @@ data class Balance(
     val smashedPens: Set<PenName>
 ) {
 
-    fun applyAction(action: ActionInBlock): Balance = action.applyToBalance(this)
+    fun applyAction(action: BlockAction): Balance = action.applyToBalance(this)
 }

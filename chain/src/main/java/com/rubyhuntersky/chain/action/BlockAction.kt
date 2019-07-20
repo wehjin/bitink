@@ -2,7 +2,7 @@ package com.rubyhuntersky.chain.action
 
 import com.rubyhuntersky.chain.Balance
 
-data class ActionInBlock(
+data class BlockAction(
     val id: ActionId,
     val action: ActionData
 ) {
