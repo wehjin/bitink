@@ -2,7 +2,7 @@ package com.rubyhuntersky.chain
 
 import com.rubyhuntersky.chain.action.ActionId
 
-data class Tag(
+data class Dot(
     val author: PenName,
     val entity: Entity,
     val attribute: Attribute,

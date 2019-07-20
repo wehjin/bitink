@@ -5,7 +5,7 @@ import com.rubyhuntersky.chain.action.ActionInBlock
 data class Balance(
     val height: BlockHeight,
     val wetInks: Set<Ink>,
-    val assertedTags: Set<Tag>,
+    val assertedDots: Set<Dot>,
     val smashedPens: Set<PenName>
 ) {
 

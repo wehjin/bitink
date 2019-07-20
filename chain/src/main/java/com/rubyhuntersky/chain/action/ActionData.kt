@@ -7,21 +7,21 @@ sealed class ActionData(val typeId: Int) {
 
     abstract val minHeight: BlockHeight
 
-    data class SummonInk(
+    data class AddInk(
         override val minHeight: BlockHeight,
         val output: Ink
     ) : ActionData(typeId = 1)
 
-    data class SiphonInk(
+    data class MoveInk(
         override val minHeight: BlockHeight,
         val inputs: List<Dip>,
         val outputs: List<Ink>,
         val feeSize: Quantity
     ) : ActionData(typeId = 2)
 
-    data class StateTag(
+    data class WriteDot(
         override val minHeight: BlockHeight,
-        val tag: Tag,
+        val dot: Dot,
         val inputs: List<Dip>,
         val overflow: Ink,
         val feeSize: Quantity

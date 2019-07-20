@@ -14,7 +14,7 @@ sealed class Chain {
             get() = Balance(
                 height = BlockHeight(0),
                 wetInks = emptySet(),
-                assertedTags = emptySet(),
+                assertedDots = emptySet(),
                 smashedPens = emptySet()
             )
     }
