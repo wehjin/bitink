@@ -14,7 +14,7 @@ sealed class ActionData(val typeId: Int) {
 
     data class SiphonInk(
         override val minHeight: BlockHeight,
-        val inputs: List<Nib>,
+        val inputs: List<Dip>,
         val outputs: List<Ink>,
         val feeSize: Quantity
     ) : ActionData(typeId = 2)
@@ -22,7 +22,7 @@ sealed class ActionData(val typeId: Int) {
     data class StateTag(
         override val minHeight: BlockHeight,
         val tag: Tag,
-        val inputs: List<Nib>,
+        val inputs: List<Dip>,
         val overflow: Ink,
         val feeSize: Quantity
     ) : ActionData(typeId = 3)

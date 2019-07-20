@@ -1,20 +1,16 @@
 package com.rubyhuntersky.chain
 
-sealed class Nib(val typeId: Int) {
+sealed class Dip(val typeId: Int) {
     abstract val inkId: InkId
 
-    data class Plain(
-        override val inkId: InkId
-    ) : Nib(1)
-
-    data class WitnessProvider(
+    data class PEN(
         override val inkId: InkId,
         val witnessLabel: WitnessLabel
-    ) : Nib(2)
+    ) : Dip(2)
 
-    data class KeyProvider(
+    data class KEY_AND_PEN(
         override val inkId: InkId,
         val releaseKey: String,
         val witnessLabel: WitnessLabel
-    ) : Nib(3)
+    ) : Dip(3)
 }
