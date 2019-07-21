@@ -1,4 +1,4 @@
-package com.rubyhuntersky.chain
+package com.rubyhuntersky.chain.ink
 
 import com.rubyhuntersky.chain.action.ActionRef
 

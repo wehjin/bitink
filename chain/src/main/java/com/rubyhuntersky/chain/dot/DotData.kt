@@ -1,4 +1,6 @@
-package com.rubyhuntersky.chain
+package com.rubyhuntersky.chain.dot
+
+import com.rubyhuntersky.chain.basics.PenName
 
 data class DotData(
     val author: PenName,

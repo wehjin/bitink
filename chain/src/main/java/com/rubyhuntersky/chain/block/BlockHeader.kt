@@ -1,6 +1,6 @@
 package com.rubyhuntersky.chain.block
 
-import com.rubyhuntersky.chain.Nonce
+import com.rubyhuntersky.chain.basics.HashValue
 
 data class BlockHeader(
     val height: BlockHeight,

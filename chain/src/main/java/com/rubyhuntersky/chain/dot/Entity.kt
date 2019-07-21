@@ -1,3 +1,3 @@
-package com.rubyhuntersky.chain
+package com.rubyhuntersky.chain.dot
 
 data class Entity(val number: Long)

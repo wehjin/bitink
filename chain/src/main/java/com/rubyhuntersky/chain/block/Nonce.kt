@@ -1,3 +1,3 @@
 package com.rubyhuntersky.chain.block
 
-data class BlockTime(val long: Long)
+data class Nonce(val value: String)

@@ -1,10 +1,15 @@
 package com.rubyhuntersky.chain.action
 
-import com.rubyhuntersky.chain.*
-import com.rubyhuntersky.chain.block.ChainState
+import com.rubyhuntersky.chain.block.Carry
 import com.rubyhuntersky.chain.block.BlockHeight
-import com.rubyhuntersky.chain.block.HashValue
-import com.rubyhuntersky.chain.block.WitnessMap
+import com.rubyhuntersky.chain.basics.HashValue
+import com.rubyhuntersky.chain.basics.PenName
+import com.rubyhuntersky.chain.basics.Quantity
+import com.rubyhuntersky.chain.witness.WitnessLabel
+import com.rubyhuntersky.chain.witness.WitnessMap
+import com.rubyhuntersky.chain.dot.DotData
+import com.rubyhuntersky.chain.ink.Dip
+import com.rubyhuntersky.chain.ink.Ink
 
 
 sealed class ActionData(val typeId: Int) {
@@ -20,18 +25,18 @@ sealed class ActionData(val typeId: Int) {
     val hashValue: HashValue
         get() = TODO()
 
-    private fun baseStep(chainState: ChainState, witnessMap: WitnessMap, mintSize: Quantity): ChainState {
-        require(chainState.height >= minHeight)
-        val inputInks = inputDips.map { it.checkInput(chainState, witnessMap, hashValue) }
-        outputInks.forEach { it.checkOutput(chainState) }
+    private fun baseStep(carry: Carry, witnessMap: WitnessMap, mintSize: Quantity): Carry {
+        require(carry.blockHeight >= minHeight)
+        val inputInks = inputDips.map { it.checkInput(carry, witnessMap, hashValue) }
+        outputInks.forEach { it.checkOutput(carry) }
         check(feeSize >= Quantity.ZERO)
         val inputQuantity = inputInks.map(Ink::quantity).fold(Quantity.ZERO, Quantity::plus)
         val outputQuantity = outputInks.map(Ink::quantity).fold(Quantity.ZERO, Quantity::plus)
         check(inputQuantity + mintSize == outputQuantity + feeSize)
-        return chainState.moveInk(to = outputInks, from = inputInks)
+        return carry.moveInk(to = outputInks, from = inputInks)
     }
 
-    abstract fun step(chainState: ChainState, witnessMap: WitnessMap): ChainState
+    abstract fun step(carry: Carry, witnessMap: WitnessMap): Carry
 
     data class AddInk(
         override val minHeight: BlockHeight,
@@ -42,9 +47,9 @@ sealed class ActionData(val typeId: Int) {
         override val outputInks: List<Ink> get() = listOf(outputInk)
         override val feeSize: Quantity get() = Quantity.ZERO
 
-        override fun step(chainState: ChainState, witnessMap: WitnessMap): ChainState {
+        override fun step(carry: Carry, witnessMap: WitnessMap): Carry {
             // TODO Rule out burned pens and limit list lengths
-            return super.baseStep(chainState, witnessMap, chainState.rewardQuantity)
+            return super.baseStep(carry, witnessMap, carry.rewardQuantity)
         }
     }
 
@@ -55,9 +60,9 @@ sealed class ActionData(val typeId: Int) {
         override val feeSize: Quantity
     ) : ActionData(typeId = 2) {
 
-        override fun step(chainState: ChainState, witnessMap: WitnessMap): ChainState {
+        override fun step(carry: Carry, witnessMap: WitnessMap): Carry {
             // TODO Rule out burned pens and limit list lengths
-            return super.baseStep(chainState, witnessMap, mintSize = Quantity.ZERO)
+            return super.baseStep(carry, witnessMap, mintSize = Quantity.ZERO)
         }
     }
 
@@ -72,13 +77,13 @@ sealed class ActionData(val typeId: Int) {
 
         override val outputInks: List<Ink> get() = listOf(overflowInk)
 
-        override fun step(chainState: ChainState, witnessMap: WitnessMap): ChainState {
+        override fun step(carry: Carry, witnessMap: WitnessMap): Carry {
             // TODO Rule out burned pens and limit list lengths
             witnessMap.findWitness(witnessLabel).also {
                 it.checkSignsHash(hashValue)
                 check(it.publicName == dotData.author)
             }
-            return super.baseStep(chainState, witnessMap, mintSize = -chainState.dotCost).assertDot(dotData)
+            return super.baseStep(carry, witnessMap, mintSize = -carry.dotCost).assertDot(dotData)
         }
     }
 
@@ -93,14 +98,14 @@ sealed class ActionData(val typeId: Int) {
 
         override val outputInks: List<Ink> get() = listOf(overflowInk)
 
-        override fun step(chainState: ChainState, witnessMap: WitnessMap): ChainState {
+        override fun step(carry: Carry, witnessMap: WitnessMap): Carry {
             // TODO Rule out burned pens and limit list lengths
             // Include current pen in set of burned pens
             witnessMap.findWitness(witnessLabel).also {
                 it.checkSignsHash(hashValue)
                 check(it.publicName == penName)
             }
-            return super.baseStep(chainState, witnessMap, mintSize = -chainState.burnCost).burnPen(penName)
+            return super.baseStep(carry, witnessMap, mintSize = -carry.burnCost).burnPen(penName)
         }
     }
 }

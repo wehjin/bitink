@@ -1,6 +1,7 @@
-package com.rubyhuntersky.chain
+package com.rubyhuntersky.chain.witness
 
-import com.rubyhuntersky.chain.block.HashValue
+import com.rubyhuntersky.chain.basics.HashValue
+import com.rubyhuntersky.chain.basics.PenName
 
 data class Witness(
     val publicName: PenName,
