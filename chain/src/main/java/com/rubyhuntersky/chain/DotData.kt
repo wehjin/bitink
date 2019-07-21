@@ -1,12 +1,9 @@
 package com.rubyhuntersky.chain
 
-import com.rubyhuntersky.chain.action.ActionId
-
-data class Dot(
+data class DotData(
     val author: PenName,
     val entity: Entity,
     val attribute: Attribute,
     val value: Value,
-    val asserted: Boolean,
-    val actionId: ActionId
+    val asserted: Boolean
 )

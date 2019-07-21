@@ -1,19 +1,15 @@
 package com.rubyhuntersky.chain.block
 
-import com.rubyhuntersky.chain.*
+import com.rubyhuntersky.chain.Nonce
 
 data class BlockHeader(
     val height: BlockHeight,
-    val previousChainId: ChainId,
+    val previousBlockHash: HashValue,
     val blockTime: BlockTime,
-    val actionsHash: String,
+    val actionListHash: HashValue,
     val nonce: Nonce,
     val historicalHash: String
 ) {
-    val id: ChainId get() = TODO()
+    val hash: HashValue get() = TODO()
 
-    fun isValid(previousChain: Chain): Boolean =
-        height == (previousChain.height.inc())
-                && previousChainId == previousChain.id
-                && blockTime.isValid(previousChain)
 }
