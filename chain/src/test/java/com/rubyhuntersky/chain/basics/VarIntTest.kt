@@ -43,7 +43,7 @@ object VarIntTest : Spek({
             , Triple(twoByteHighLimitEncoded, twoByteHighLimitDecoded, "twoByteHighLimit")
             , Triple(threeByteLowLimitEncoded, threeByteLowLimitDecoded, "threeByteLowLimit")
             , Triple(threeByteHighLimitEncoded, threeByteHighLimitDecoded, "threeByteHighLimit")
-            , Triple(nineByteHighLimitEncoded, nineByteHighLimitDecoded, "ninByteHighLimit")
+            , Triple(nineByteHighLimitEncoded, nineByteHighLimitDecoded, "nineByteHighLimit")
         )
 
         describe("reading") {
@@ -61,27 +61,36 @@ object VarIntTest : Spek({
             }
 
             it("accepts arrays with varying runs of significant bytes") {
-                allEncodedDecoded
-                    .forEach { (testArray, expectedValue, name) ->
-                        val varint = VarInt.read(testArray, 0)
-                        assertEquals(expectedValue, varint.value) { name }
-                    }
+                allEncodedDecoded.forEach { (testArray, expectedValue, name) ->
+                    val varint = VarInt.read(testArray, 0)
+                    assertEquals(expectedValue, varint.value) { name }
+                }
             }
 
             it("rejects arrays with more than 9 significant bytes") {
                 val exception = assertThrows<Throwable> { VarInt.read(tooManyBytesEncoded) }
                 assertEquals("Too many significant bytes, limit 9.", exception.localizedMessage)
             }
+
+            it("rejects empty arrays") {
+                val exception = assertThrows<Throwable> { VarInt.read(ByteArray(0)) }
+                assertEquals("Too few bytes.", exception.localizedMessage)
+            }
+
+            it("rejects arrays that end without terminating") {
+                val testArray = threeByteHighLimitEncoded.sliceArray(0 until threeByteHighLimitEncoded.lastIndex)
+                val exception = assertThrows<Throwable> { VarInt.read(testArray) }
+                assertEquals("Too few bytes.", exception.localizedMessage)
+            }
         }
 
         describe("writing") {
 
             it("accepts values of varying lengths") {
-                allEncodedDecoded
-                    .forEach { (expectedArray, testValue, name) ->
-                        val varint = VarInt(testValue)
-                        assertTrue(expectedArray.contentEquals(varint.bytes)) { name }
-                    }
+                allEncodedDecoded.forEach { (expectedArray, testValue, name) ->
+                    val varint = VarInt(testValue)
+                    assertTrue(expectedArray.contentEquals(varint.bytes)) { name }
+                }
             }
 
             it("rejects negative values") {
