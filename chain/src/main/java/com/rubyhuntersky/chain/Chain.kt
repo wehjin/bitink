@@ -1,7 +1,10 @@
 package com.rubyhuntersky.chain
 
 import com.rubyhuntersky.chain.basics.HashValue
-import com.rubyhuntersky.chain.block.*
+import com.rubyhuntersky.chain.block.Block
+import com.rubyhuntersky.chain.block.BlockHeight
+import com.rubyhuntersky.chain.block.BlockTime
+import com.rubyhuntersky.chain.block.Carry
 
 sealed class Chain {
 
