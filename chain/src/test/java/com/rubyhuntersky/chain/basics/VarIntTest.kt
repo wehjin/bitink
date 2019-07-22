@@ -1,99 +1,109 @@
 package com.rubyhuntersky.chain.basics
 
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.assertThrows
 import org.spekframework.spek2.Spek
 import org.spekframework.spek2.style.specification.describe
 import java.math.BigInteger
-import kotlin.math.pow
 
 object VarIntTest : Spek({
 
     describe("VarInt") {
 
-        it("requires a non-negative value to construct") {
-            val negativeValue = BigInteger.valueOf(-1)
-            val exception = assertThrows<Throwable> { VarInt(negativeValue) }
-            assertEquals("Value must be non-negative.", exception.localizedMessage)
+        val zeroEncoded = intArrayOf(0b00000000).toSignedByteArray()
+        val oneEncoded = intArrayOf(0b00000001).toSignedByteArray()
+        val oneByteHighLimitEncoded = intArrayOf(0b01111111).toSignedByteArray()
+        val twoByteLowLimitEncoded = intArrayOf(0b10000000, 0b00000001).toSignedByteArray()
+        val twoByteFirstByteFullEncoded = intArrayOf(0b11111111, 0b00000001).toSignedByteArray()
+        val twoByteHighLimitEncoded = intArrayOf(0b11111111, 0b01111111).toSignedByteArray()
+        val threeByteLowLimitEncoded = intArrayOf(0b10000000, 0b10000000, 0b00000001).toSignedByteArray()
+        val threeByteHighLimitEncoded = intArrayOf(0b11111111, 0b11111111, 0b01111111).toSignedByteArray()
+        val nineByteHighLimitEncoded =
+            (0..7).map { 0b11111111 }.toMutableList().apply { add(0b01111111) }.toSignedByteArray()
+        val tooManyBytesEncoded =
+            (0..8).map { 0b10000000 }.toMutableList().apply { add(0b00000001) }.toSignedByteArray()
 
-            val zeroValue = BigInteger.ZERO
-            assertNotNull(VarInt(zeroValue))
-        }
+        val tooHighDecoded = BigInteger.valueOf(2).pow(63)
+        val nineByteHighLimitDecoded = tooHighDecoded - BigInteger.ONE
+        val threeByteHighLimitDecoded = BigInteger.valueOf(2097151)
+        val threeByteLowLimitDecoded = BigInteger.valueOf(16384)
+        val twoByteHighLimitDecoded = BigInteger.valueOf(16383)
+        val twoByteFirstByteFullDecoded = BigInteger.valueOf(255)
+        val twoByteLowLimitDecoded = BigInteger.valueOf(128)
+        val oneByteHighLimitDecoded = BigInteger.valueOf(127)
+        val oneDecoded = BigInteger.ONE
+        val zeroDecoded = BigInteger.ZERO
 
-        it("requires a 63 bit or lower value to construct") {
-            val tooHighValue = BigInteger.valueOf(2).pow(63)
-            val topValue = tooHighValue - BigInteger.ONE
+        val allEncodedDecoded = listOf(
+            Triple(zeroEncoded, zeroDecoded, "zero")
+            , Triple(oneEncoded, oneDecoded, "one")
+            , Triple(oneByteHighLimitEncoded, oneByteHighLimitDecoded, "oneByteHighLimit")
+            , Triple(twoByteLowLimitEncoded, twoByteLowLimitDecoded, "twoByteLowLimit")
+            , Triple(twoByteFirstByteFullEncoded, twoByteFirstByteFullDecoded, "twoByteFirstByteFull")
+            , Triple(twoByteHighLimitEncoded, twoByteHighLimitDecoded, "twoByteHighLimit")
+            , Triple(threeByteLowLimitEncoded, threeByteLowLimitDecoded, "threeByteLowLimit")
+            , Triple(threeByteHighLimitEncoded, threeByteHighLimitDecoded, "threeByteHighLimit")
+            , Triple(nineByteHighLimitEncoded, nineByteHighLimitDecoded, "ninByteHighLimit")
+        )
 
-            assertNotNull(VarInt(topValue))
+        describe("reading") {
 
-            val exception = assertThrows<Throwable> { VarInt(tooHighValue) }
-            assertEquals("Value must fit in 63 bits.", exception.localizedMessage)
-        }
+            it("ignores insignificant bytes") {
+                val tests = listOf(
+                    Triple(intArrayOf(0b00000000, 0x42).toSignedByteArray(), 0, BigInteger.ZERO)
+                    , Triple(intArrayOf(0x42, 0b00000000).toSignedByteArray(), 1, BigInteger.ZERO)
+                    , Triple(intArrayOf(0x42, 0b00000000, 0x42).toSignedByteArray(), 1, BigInteger.ZERO)
+                )
+                tests.forEach { (testArray, start, expected) ->
+                    val varint = VarInt.read(testArray, start)
+                    assertEquals(expected, varint.value) { "Input: ${testArray.toHex()}" }
+                }
+            }
 
-        it("provides a one-byte array for values under 8 bits long") {
-            (0 until 128).forEach {
-                val varint = VarInt(it.toLong())
-                val bytes = varint.bytes
-                assertEquals(1, bytes.size)
-                assertEquals(it.toByte(), bytes[0])
+            it("accepts arrays with varying runs of significant bytes") {
+                allEncodedDecoded
+                    .forEach { (testArray, expectedValue, name) ->
+                        val varint = VarInt.read(testArray, 0)
+                        assertEquals(expectedValue, varint.value) { name }
+                    }
+            }
+
+            it("rejects arrays with more than 9 significant bytes") {
+                val exception = assertThrows<Throwable> { VarInt.read(tooManyBytesEncoded) }
+                assertEquals("Too many significant bytes, limit 9.", exception.localizedMessage)
             }
         }
 
-        it("provides a two-byte array for values between 8 and 14 bits long") {
-            (128 until 16384).forEach {
-                val varint = VarInt(it.toLong())
-                val bytes = varint.bytes
-                assertEquals(2, bytes.size)
+        describe("writing") {
 
-                val byte0 = bytes[0].toIntUnsigned()
-                assertEquals(it and 0x7f, byte0 and 0x7f)
-                assertEquals(0x80, byte0 and 0x80)
-
-                val byte1 = bytes[1].toIntUnsigned()
-                assertEquals(it.shr(7) and 0x7f, byte1 and 0x7f)
-                assertEquals(0x00, byte1 and 0x80)
+            it("accepts values of varying lengths") {
+                allEncodedDecoded
+                    .forEach { (expectedArray, testValue, name) ->
+                        val varint = VarInt(testValue)
+                        assertTrue(expectedArray.contentEquals(varint.bytes)) { name }
+                    }
             }
-        }
 
-        it("provides a three-byte array for values between 14 and 21 bits long") {
-            (14 until 21).map { 2.0.pow(it.toDouble()).toInt() }
-                .toMutableList().also { it.add((it.last() - 1) * 2 - 1) }
-                .forEach {
-                    val varint = VarInt(it.toLong())
-                    val bytes = varint.bytes
-                    assertEquals(3, bytes.size, "it: ${Integer.toHexString(it)}")
+            it("rejects negative values") {
+                val negativeValue = BigInteger.valueOf(-1)
+                val exception = assertThrows<Throwable> { VarInt(negativeValue) }
+                assertEquals("Value must be non-negative.", exception.localizedMessage)
+            }
 
-                    val byte0 = bytes[0].toIntUnsigned()
-                    assertEquals(it and 0x7f, byte0 and 0x7f)
-                    assertEquals(0x80, byte0 and 0x80)
+            it("accepts zero value") {
+                val varInt = VarInt(BigInteger.ZERO)
+                assertNotNull(varInt)
+            }
 
-                    val byte1 = bytes[1].toIntUnsigned()
-                    assertEquals(it.shr(7) and 0x7f, byte1 and 0x7f)
-                    assertEquals(0x80, byte1 and 0x80)
+            it("rejects values above the high limit") {
+                val exception = assertThrows<Throwable> { VarInt(tooHighDecoded) }
+                assertEquals("Value must fit in 63 bits.", exception.localizedMessage)
+            }
 
-                    val byte2 = bytes[2].toIntUnsigned()
-                    assertEquals(it.shr(14) and 0x7f, byte2 and 0x7f)
-                    assertEquals(0x00, byte2 and 0x80)
-                }
-        }
-
-        it("provides a byte array that is (bit-length + 6)/7 bytes long") {
-            (1 until 63).map { BigInteger.valueOf(2).pow(it) }
-                .forEach { value ->
-                    val varint = VarInt(value)
-                    val bytes = varint.bytes
-                    assertEquals((value.bitLength() + 6) / 7, bytes.size, "value: 0x${value.toString(16)}")
-                    bytes.map { it.toIntUnsigned() }
-                        .forEachIndexed { index, it ->
-                            val expected = if (index < bytes.size - 1) 0x80 else 0x00
-                            assertEquals(expected, it and 0x80)
-                        }
-                }
-        }
-
-        it("reads its value from a byte array") {
-
+            it("accepts values at the high limit") {
+                val varInt = VarInt(nineByteHighLimitDecoded)
+                assertNotNull(varInt)
+            }
         }
     }
 })
