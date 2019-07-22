@@ -86,13 +86,16 @@ object VarIntTest : Spek({
 
         describe("writing") {
 
-            it("accepts values of varying lengths") {
+            it("writes byte arrays of varying lengths") {
                 allEncodedDecoded.forEach { (expectedArray, testValue, name) ->
                     val varint = VarInt(testValue)
                     assertTrue(expectedArray.contentEquals(varint.bytes)) { name }
                 }
             }
 
+        }
+
+        describe("building") {
             it("rejects negative values") {
                 val negativeValue = BigInteger.valueOf(-1)
                 val exception = assertThrows<Throwable> { VarInt(negativeValue) }
@@ -100,7 +103,11 @@ object VarIntTest : Spek({
             }
 
             it("accepts zero value") {
-                val varInt = VarInt(BigInteger.ZERO)
+                assertNotNull(VarInt(BigInteger.ZERO))
+            }
+
+            it("accepts values at the high limit") {
+                val varInt = VarInt(nineByteHighLimitDecoded)
                 assertNotNull(varInt)
             }
 
@@ -109,9 +116,8 @@ object VarIntTest : Spek({
                 assertEquals("Value must fit in 63 bits.", exception.localizedMessage)
             }
 
-            it("accepts values at the high limit") {
-                val varInt = VarInt(nineByteHighLimitDecoded)
-                assertNotNull(varInt)
+            it("accepts Long") {
+                assertNotNull(VarInt(33L))
             }
         }
     }

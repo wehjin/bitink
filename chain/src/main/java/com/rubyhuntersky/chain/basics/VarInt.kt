@@ -6,6 +6,7 @@ import java.lang.Integer.min
 import java.math.BigInteger
 
 data class VarInt(val value: BigInteger) : BlockElement {
+    constructor(long: Long) : this(BigInteger.valueOf(long))
 
     init {
         require(value >= BigInteger.ZERO) { "Value must be non-negative." }
