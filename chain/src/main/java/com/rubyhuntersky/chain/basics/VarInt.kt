@@ -20,7 +20,7 @@ data class VarInt(val value: BigInteger) : BlockElement {
             })
             rolling = rolling.shr(7)
             val all8 = lower7 or if (rolling > BigInteger.ZERO) 0b10000000 else 0b00000000
-            byteList.add((all8 - 256).toByte())
+            byteList.add(all8.toSignedByte())
         }
         if (byteList.size == 0) {
             ByteArray(1)

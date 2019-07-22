@@ -10,7 +10,7 @@ import kotlin.math.pow
 
 object VarIntTest : Spek({
 
-    describe("UnsignedVarint") {
+    describe("VarInt") {
 
         it("requires a non-negative value to construct") {
             val negativeValue = BigInteger.valueOf(-1)
@@ -46,11 +46,11 @@ object VarIntTest : Spek({
                 val bytes = varint.bytes
                 assertEquals(2, bytes.size)
 
-                val byte0 = bytes[0].toInt() + 256
+                val byte0 = bytes[0].toIntUnsigned()
                 assertEquals(it and 0x7f, byte0 and 0x7f)
                 assertEquals(0x80, byte0 and 0x80)
 
-                val byte1 = bytes[1].toInt() + 256
+                val byte1 = bytes[1].toIntUnsigned()
                 assertEquals(it.shr(7) and 0x7f, byte1 and 0x7f)
                 assertEquals(0x00, byte1 and 0x80)
             }
@@ -64,15 +64,15 @@ object VarIntTest : Spek({
                     val bytes = varint.bytes
                     assertEquals(3, bytes.size, "it: ${Integer.toHexString(it)}")
 
-                    val byte0 = bytes[0].toInt() + 256
+                    val byte0 = bytes[0].toIntUnsigned()
                     assertEquals(it and 0x7f, byte0 and 0x7f)
                     assertEquals(0x80, byte0 and 0x80)
 
-                    val byte1 = bytes[1].toInt() + 256
+                    val byte1 = bytes[1].toIntUnsigned()
                     assertEquals(it.shr(7) and 0x7f, byte1 and 0x7f)
                     assertEquals(0x80, byte1 and 0x80)
 
-                    val byte2 = bytes[2].toInt() + 256
+                    val byte2 = bytes[2].toIntUnsigned()
                     assertEquals(it.shr(14) and 0x7f, byte2 and 0x7f)
                     assertEquals(0x00, byte2 and 0x80)
                 }
@@ -84,12 +84,16 @@ object VarIntTest : Spek({
                     val varint = VarInt(value)
                     val bytes = varint.bytes
                     assertEquals((value.bitLength() + 6) / 7, bytes.size, "value: 0x${value.toString(16)}")
-                    bytes.map { it.toInt() + 256 }
+                    bytes.map { it.toIntUnsigned() }
                         .forEachIndexed { index, it ->
                             val expected = if (index < bytes.size - 1) 0x80 else 0x00
                             assertEquals(expected, it and 0x80)
                         }
                 }
+        }
+
+        it("reads its value from a byte array") {
+
         }
     }
 })
