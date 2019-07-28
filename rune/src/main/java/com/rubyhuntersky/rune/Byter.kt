@@ -1,6 +1,6 @@
 package com.rubyhuntersky.rune
 
-interface ByteArrayPrinter {
+interface Byter {
     val bytes: ByteArray
 }
 

@@ -1,8 +1,5 @@
 package com.rubyhuntersky.rune
 
-import com.rubyhuntersky.rune.ContentId
-import com.rubyhuntersky.rune.toHex
-import com.rubyhuntersky.rune.toSignedByteArray
 import io.ipfs.cid.Cid
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Nested
@@ -68,7 +65,7 @@ internal class ContentIdTest {
 
         @Test
         internal fun read() {
-            assertEquals(contentId, ContentId.read(idEncoded))
+            assertEquals(contentId, ContentId.debyte(idEncoded))
         }
     }
 

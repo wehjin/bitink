@@ -3,7 +3,7 @@ package com.rubyhuntersky.rune
 import java.lang.Integer.min
 import java.math.BigInteger
 
-data class VarInt(val value: BigInteger) : ByteArrayPrinter {
+data class VarInt(val value: BigInteger) : Byter {
     constructor(long: Long) : this(BigInteger.valueOf(long))
 
     init {
@@ -29,12 +29,14 @@ data class VarInt(val value: BigInteger) : ByteArrayPrinter {
         }
     }
 
-    companion object : ByteArrayParser<VarInt> {
+    companion object : Debyter<VarInt> {
+
+        fun valueOf(long: Long) = VarInt(BigInteger.valueOf(long))
 
         private const val byteLimit = 9
         private const val bitLimit = byteLimit * 7
 
-        override fun read(byteArray: ByteArray, start: Int): VarInt {
+        override fun debyte(byteArray: ByteArray, start: Int): VarInt {
             require(byteArray.size - start > 0) { "Too few bytes." }
             val maxValidIndex = start + byteLimit - 1
             val lastIndex = min(byteArray.lastIndex, maxValidIndex)

@@ -55,7 +55,7 @@ internal class VarIntTest {
                 , Triple(intArrayOf(0x42, 0b00000000, 0x42).toSignedByteArray(), 1, BigInteger.ZERO)
             )
             tests.forEach { (testArray, start, expected) ->
-                val varint = VarInt.read(testArray, start)
+                val varint = VarInt.debyte(testArray, start)
                 assertEquals(expected, varint.value) { "Input: ${testArray.toHex()}" }
             }
         }
@@ -64,7 +64,7 @@ internal class VarIntTest {
         internal fun acceptsArraysWithVaryingLengthsOfSignificantBytes() {
 
             allEncodedDecoded.forEach { (testArray, expectedValue, name) ->
-                val varint = VarInt.read(testArray, 0)
+                val varint = VarInt.debyte(testArray, 0)
                 assertEquals(expectedValue, varint.value) { name }
             }
         }
@@ -72,21 +72,21 @@ internal class VarIntTest {
         @Test
         internal fun rejectsArraysWithMoreThanNineSignificantBytes() {
 
-            val exception = assertThrows<Throwable> { VarInt.read(tooManyBytesEncoded) }
+            val exception = assertThrows<Throwable> { VarInt.debyte(tooManyBytesEncoded) }
             assertEquals("Too many significant bytes, limit 9.", exception.localizedMessage)
         }
 
         @Test
         internal fun rejectsEmptyArrays() {
 
-            val exception = assertThrows<Throwable> { VarInt.read(ByteArray(0)) }
+            val exception = assertThrows<Throwable> { VarInt.debyte(ByteArray(0)) }
             assertEquals("Too few bytes.", exception.localizedMessage)
         }
 
         @Test
         internal fun rejectsArraysThatEndWithoutTerminating() {
             val testArray = threeByteHighLimitEncoded.sliceArray(0 until threeByteHighLimitEncoded.lastIndex)
-            val exception = assertThrows<Throwable> { VarInt.read(testArray) }
+            val exception = assertThrows<Throwable> { VarInt.debyte(testArray) }
             assertEquals("Too few bytes.", exception.localizedMessage)
         }
     }
