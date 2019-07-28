@@ -2,7 +2,7 @@ package com.rubyhuntersky.rune
 
 import io.ipfs.cid.Cid
 
-data class ContentId(val cid: Cid) : Byter {
+data class MultiAddress(val cid: Cid) : Byter {
 
     val multibase: String get() = "base58btc"
     val cidVersion: String get() = "cidv0"
@@ -11,14 +11,14 @@ data class ContentId(val cid: Cid) : Byter {
 
     override val bytes: ByteArray get() = cid.toBytes()
 
-    companion object : Debyter<ContentId> {
+    companion object : Debyter<MultiAddress> {
 
-        override fun debyte(byteArray: ByteArray, start: Int): ContentId {
+        override fun debyte(byteArray: ByteArray, start: Int): MultiAddress {
             val readFrom = byteArray.sliceArray(start until byteArray.size)
             val cid = Cid.cast(readFrom)
-            return ContentId(cid)
+            return MultiAddress(cid)
         }
 
-        fun of(string: String): ContentId = ContentId(Cid.decode(string))
+        fun valueOf(string: String): MultiAddress = MultiAddress(Cid.decode(string))
     }
 }

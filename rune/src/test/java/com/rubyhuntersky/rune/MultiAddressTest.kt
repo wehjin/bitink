@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
-internal class ContentIdTest {
+internal class MultiAddressTest {
 
     @Nested
     inner class IpfsVersion0 {
@@ -48,7 +48,7 @@ internal class ContentIdTest {
             0xca
         ).toSignedByteArray()
 
-        private val contentId = ContentId(idDecoded)
+        private val contentId = MultiAddress(idDecoded)
 
         @Test
         internal fun construct() {
@@ -65,7 +65,7 @@ internal class ContentIdTest {
 
         @Test
         internal fun read() {
-            assertEquals(contentId, ContentId.debyte(idEncoded))
+            assertEquals(contentId, MultiAddress.debyte(idEncoded))
         }
     }
 

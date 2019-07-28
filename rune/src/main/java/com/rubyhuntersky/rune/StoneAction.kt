@@ -1,7 +1,7 @@
 package com.rubyhuntersky.rune
 
 data class Stone(
-    val scriber: Rune.Name,
+    val scriber: Rune.Creature,
     val entity: Rune,
     val attribute: Rune,
     val value: Rune
