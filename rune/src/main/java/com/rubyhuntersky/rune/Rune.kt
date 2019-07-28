@@ -1,3 +1,9 @@
 package com.rubyhuntersky.rune
 
-class Rune
+sealed class Rune : ByteArrayPrinter {
+
+    data class Number(
+        val varInt: VarInt
+    )
+
+}

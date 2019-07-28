@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test
 internal class RuneTest {
 
     @Test
-    fun main() {
+    fun placeholder() {
         assertTrue(true)
     }
 }

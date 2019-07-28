@@ -1,4 +1,4 @@
-package com.rubyhuntersky.chain.basics
+package com.rubyhuntersky.rune
 
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test

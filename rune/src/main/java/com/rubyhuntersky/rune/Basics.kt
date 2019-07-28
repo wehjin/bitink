@@ -1,4 +1,4 @@
-package com.rubyhuntersky.chain.basics
+package com.rubyhuntersky.rune
 
 fun Byte.toIntUnsigned(): Int = toInt() and 0xff
 fun Int.toSignedByte(): Byte =

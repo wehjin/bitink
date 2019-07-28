@@ -1,11 +1,9 @@
-package com.rubyhuntersky.chain.basics
+package com.rubyhuntersky.rune
 
-import com.rubyhuntersky.chain.block.BlockElement
-import com.rubyhuntersky.chain.block.BlockElementReader
 import java.lang.Integer.min
 import java.math.BigInteger
 
-data class VarInt(val value: BigInteger) : BlockElement {
+data class VarInt(val value: BigInteger) : ByteArrayPrinter {
     constructor(long: Long) : this(BigInteger.valueOf(long))
 
     init {
@@ -31,7 +29,7 @@ data class VarInt(val value: BigInteger) : BlockElement {
         }
     }
 
-    companion object : BlockElementReader<VarInt> {
+    companion object : ByteArrayParser<VarInt> {
 
         private const val byteLimit = 9
         private const val bitLimit = byteLimit * 7
