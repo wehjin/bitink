@@ -11,21 +11,12 @@ buildscript {
 apply plugin: 'java-library'
 apply plugin: 'kotlin'
 
-test {
-    useJUnitPlatform {
-        includeEngines 'spek2'
-    }
-}
-
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
     api "com.github.multiformats:java-multihash:1.2.1"
     api "com.github.ipld:java-cid:1.1.1"
-    api project(path: ':rune')
     testImplementation('org.junit.jupiter:junit-jupiter:5.5.1')
-    testImplementation "org.spekframework.spek2:spek-dsl-jvm:$spek_version"
-    testImplementation "org.spekframework.spek2:spek-runner-junit5:$spek_version"
     testRuntimeOnly "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
 }
 
