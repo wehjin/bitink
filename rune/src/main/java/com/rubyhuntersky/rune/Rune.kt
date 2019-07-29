@@ -6,20 +6,21 @@ sealed class Rune(private val subTypeId: Int, private val subTypePrinter: Byter)
 
     data class Creature(val multiName: MultiName) : Rune(1, multiName) {
         companion object {
-            fun valueOf(string: String) = Creature(MultiName(string))
+            fun valueOf(nameString: String) = Creature(MultiName.valueOf(nameString))
         }
     }
 
     data class Place(val multiAddress: MultiAddress) : Rune(2, multiAddress) {
         companion object {
-            fun valueOf(string: String) = Place(MultiAddress.valueOf(string))
+            fun valueAt(addressString: String) = Place(MultiAddress.valueOf(addressString))
         }
     }
 
     data class Thing(val multiThing: MultiThing) : Rune(3, multiThing) {
         companion object {
             fun valueOf(long: Long) = Thing(MultiThing.valueOf(long))
-            fun valueOf(string: String) = Thing(MultiThing.valueOf(string))
+            fun valueOf(textString: String) = Thing(MultiThing.valueOf(textString))
+            fun valueAt(contentIdString: String) = Thing(MultiThing.valueAt(contentIdString))
         }
     }
 }

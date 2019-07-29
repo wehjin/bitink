@@ -6,6 +6,6 @@ data class MultiName(val name: String) : Byter {
 
     companion object {
 
-        fun of(bech32: String): MultiName = MultiName(bech32)
+        fun valueOf(bech32: String): MultiName = MultiName(bech32)
     }
 }

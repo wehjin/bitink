@@ -10,14 +10,14 @@ internal class RuneTest {
     inner class Building {
 
         @Test
-        internal fun identity() {
+        internal fun person() {
             val rune = Rune.Creature.valueOf("bc1a")
             assertNotNull(rune)
         }
 
         @Test
-        internal fun noid() {
-            val rune = Rune.Place.valueOf("QmWATWQ7fVPP2EFGu71UkfnqhYXDYH566qy47CnJDgvs8u")
+        internal fun place() {
+            val rune = Rune.Place.valueAt("https://example.com")
             assertNotNull(rune)
         }
 
@@ -30,6 +30,12 @@ internal class RuneTest {
         @Test
         internal fun textThing() {
             val rune = Rune.Thing.valueOf("a")
+            assertNotNull(rune)
+        }
+
+        @Test
+        internal fun contentThing() {
+            val rune = Rune.Thing.valueAt("QmWATWQ7fVPP2EFGu71UkfnqhYXDYH566qy47CnJDgvs8u")
             assertNotNull(rune)
         }
     }
