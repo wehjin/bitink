@@ -1,5 +1,6 @@
 package com.rubyhuntersky.rune
 
+import com.rubyhuntersky.rune.rune.Rune
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -10,32 +11,32 @@ internal class RuneTest {
     inner class Building {
 
         @Test
-        internal fun person() {
-            val rune = Rune.Creature.valueOf("bc1a")
+        internal fun spirit() {
+            val rune = Rune.Spirit.valueOf("bc1a")
             assertNotNull(rune)
         }
 
         @Test
-        internal fun place() {
-            val rune = Rune.Place.valueAt("https://example.com")
+        internal fun content() {
+            val rune = Rune.Content.valueAt("QmWATWQ7fVPP2EFGu71UkfnqhYXDYH566qy47CnJDgvs8u")
             assertNotNull(rune)
         }
 
         @Test
-        internal fun numberThing() {
-            val rune = Rune.Thing.valueOf(3)
+        internal fun text() {
+            val rune = Rune.Text.valueOf("a")
             assertNotNull(rune)
         }
 
         @Test
-        internal fun textThing() {
-            val rune = Rune.Thing.valueOf("a")
+        internal fun number() {
+            val rune = Rune.Number.valueOf(3)
             assertNotNull(rune)
         }
 
         @Test
-        internal fun contentThing() {
-            val rune = Rune.Thing.valueAt("QmWATWQ7fVPP2EFGu71UkfnqhYXDYH566qy47CnJDgvs8u")
+        internal fun truth() {
+            val rune = Rune.Truth.valueOf(true)
             assertNotNull(rune)
         }
     }

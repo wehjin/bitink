@@ -1,4 +1,4 @@
-package com.rubyhuntersky.rune.basics
+package com.rubyhuntersky.rune.basics.things
 
 import com.rubyhuntersky.rune.basics.byter.Byter
 
