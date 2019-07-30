@@ -1,6 +1,13 @@
 package com.rubyhuntersky.rune
 
-sealed class Rune(private val subTypeId: Int, private val subTypePrinter: Byter) : Byter {
+import com.rubyhuntersky.rune.basics.MultiAddress
+import com.rubyhuntersky.rune.basics.MultiName
+import com.rubyhuntersky.rune.basics.MultiThing
+import com.rubyhuntersky.rune.basics.byter.Byter
+import com.rubyhuntersky.rune.basics.things.VarInt
+
+sealed class Rune(private val subTypeId: Int, private val subTypePrinter: Byter) :
+    Byter {
 
     override val bytes: ByteArray by lazy { VarInt(subTypeId.toLong()).bytes + subTypePrinter.bytes }
 

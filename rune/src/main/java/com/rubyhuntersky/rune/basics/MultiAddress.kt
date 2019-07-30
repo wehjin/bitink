@@ -1,4 +1,6 @@
-package com.rubyhuntersky.rune
+package com.rubyhuntersky.rune.basics
+
+import com.rubyhuntersky.rune.basics.byter.Byter
 
 data class MultiAddress(val value: String) : Byter {
     companion object {

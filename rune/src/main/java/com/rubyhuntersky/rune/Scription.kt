@@ -1,5 +1,7 @@
 package com.rubyhuntersky.rune
 
+import com.rubyhuntersky.rune.basics.byter.Byter
+
 data class Scription<out T : Byter>(
     val subject: T,
     val scribed: Boolean

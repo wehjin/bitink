@@ -1,5 +1,7 @@
-package com.rubyhuntersky.rune
+package com.rubyhuntersky.rune.basics.things
 
+import com.rubyhuntersky.rune.basics.byter.Byter
+import com.rubyhuntersky.rune.basics.byter.Debyter
 import io.ipfs.cid.Cid
 
 data class ContentId(val cid: Cid) : Byter {

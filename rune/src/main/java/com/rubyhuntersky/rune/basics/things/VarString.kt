@@ -1,4 +1,6 @@
-package com.rubyhuntersky.rune
+package com.rubyhuntersky.rune.basics.things
+
+import com.rubyhuntersky.rune.basics.byter.Byter
 
 
 data class VarString(val value: String) : Byter {

@@ -1,4 +1,6 @@
-package com.rubyhuntersky.rune
+package com.rubyhuntersky.rune.basics
+
+import com.rubyhuntersky.rune.basics.byter.Byter
 
 data class MultiName(val name: String) : Byter {
     override val bytes: ByteArray
@@ -6,6 +8,7 @@ data class MultiName(val name: String) : Byter {
 
     companion object {
 
-        fun valueOf(bech32: String): MultiName = MultiName(bech32)
+        fun valueOf(bech32: String): MultiName =
+            MultiName(bech32)
     }
 }

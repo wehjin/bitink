@@ -1,5 +1,8 @@
 package com.rubyhuntersky.rune
 
+import com.rubyhuntersky.rune.basics.things.ContentId
+import com.rubyhuntersky.rune.basics.toHex
+import com.rubyhuntersky.rune.basics.toSignedByteArray
 import io.ipfs.cid.Cid
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Nested

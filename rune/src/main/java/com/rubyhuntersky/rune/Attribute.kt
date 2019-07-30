@@ -1,3 +1,3 @@
-package com.rubyhuntersky.chain.dot
+package com.rubyhuntersky.rune
 
 data class Attribute(val generalPart: String, val specificPart: String)

@@ -1,5 +1,8 @@
 package com.rubyhuntersky.rune
 
+import com.rubyhuntersky.rune.basics.things.VarInt
+import com.rubyhuntersky.rune.basics.toHex
+import com.rubyhuntersky.rune.basics.toSignedByteArray
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test

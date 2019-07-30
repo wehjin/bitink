@@ -1,5 +1,7 @@
 package com.rubyhuntersky.rune
 
+import com.rubyhuntersky.rune.basics.toIntUnsigned
+import com.rubyhuntersky.rune.basics.toSignedByte
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
